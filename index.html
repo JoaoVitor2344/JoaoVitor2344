@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>João Brito — Desenvolvedor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accent": "#a8432a",
+  "theme": "light",
+  "density": "comfortable"
+}/*EDITMODE-END*/;
+</script>
+<style>
+:root{
+  --accent:#a8432a;
+  --maxw:1240px;
+  --pad:clamp(22px,5vw,80px);
+  --row-pad:clamp(78px,9vh,120px);
+  --dur:320ms;
+  --ease:cubic-bezier(.22,.61,.24,1);
+  --sans:'Archivo',ui-sans-serif,system-ui,sans-serif;
+  --display:'Fraunces','Times New Roman',Georgia,serif;
+}
+:root[data-theme="light"]{
+  --bg:#f2eee5;
+  --bg-2:#e9e3d6;
+  --fg:#1b1917;
+  --fg-dim:#4f4a43;
+  --fg-faint:#8b8378;
+  --line:#c9c0af;
+  --line-soft:#ddd5c6;
+  --card:#e9e3d6;
+  --on-accent:#fdfaf4;
+  --accent-ink:var(--accent);
+  --grain:.055;
+}
+:root[data-theme="dark"]{
+  --bg:#15130f;
+  --bg-2:#1d1a15;
+  --fg:#efe8da;
+  --fg-dim:#b4aa99;
+  --fg-faint:#7d7466;
+  --line:#3a3428;
+  --line-soft:#282319;
+  --card:#1b1813;
+  --on-accent:#14120e;
+  --accent-ink:color-mix(in oklab,var(--accent) 52%,#f6ecd8);
+  --grain:.04;
+}
+:root[data-density="compact"]{--row-pad:clamp(54px,6vh,84px)}
+:root[data-density="spacious"]{--row-pad:clamp(110px,14vh,180px)}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--fg);
+  font-family:var(--sans);font-size:16.5px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  transition:background var(--dur) var(--ease),color var(--dur) var(--ease);
+}
+/* grão de papel — tira o brilho de tela */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:var(--grain);
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>");
+  mix-blend-mode:multiply;
+}
+:root[data-theme="dark"] body::before{mix-blend-mode:screen}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--accent-ink);outline-offset:3px}
+h1,h2,h3{margin:0;font-weight:400;text-wrap:pretty}
+p{margin:0}
+::selection{background:var(--accent);color:var(--on-accent)}
+
+.wrap{position:relative;z-index:1;max-width:var(--maxw);margin:0 auto;padding:0 var(--pad)}
+.eyebrow{
+  font-family:var(--sans);font-size:10.5px;font-weight:600;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--fg-faint);
+}
+
+/* ─────────── CABEÇALHO ─────────── */
+.head{position:sticky;top:0;z-index:50;background:color-mix(in oklab,var(--bg) 90%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.head__inner{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad);display:flex;align-items:center;justify-content:space-between;gap:20px;height:58px;border-bottom:1px solid transparent;transition:border-color var(--dur) var(--ease)}
+.head.scrolled .head__inner{border-bottom-color:var(--line-soft)}
+.head__brand{font-family:var(--display);font-size:19px;font-variation-settings:'SOFT' 20,'WONK' 1;letter-spacing:-.01em}
+.head__brand i{font-style:italic}
+.head__right{display:flex;align-items:center;gap:6px}
+.head__links{display:flex;gap:2px}
+.head__links a{
+  padding:7px 11px;font-size:12.5px;color:var(--fg-dim);
+  border-bottom:1px solid transparent;transition:color var(--dur) var(--ease),border-color var(--dur) var(--ease);
+}
+.head__links a:hover{color:var(--fg)}
+.head__links a[aria-current="true"]{color:var(--fg);border-bottom-color:var(--accent-ink)}
+.icon-btn{
+  width:32px;height:32px;border-radius:50%;background:transparent;border:1px solid var(--line-soft);
+  color:var(--fg-dim);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;
+  transition:all var(--dur) var(--ease);
+}
+.icon-btn:hover{color:var(--fg);border-color:var(--line);background:var(--bg-2)}
+.head__burger{display:none}
+@media (max-width:860px){
+  .head__links{position:fixed;inset:58px 0 auto;flex-direction:column;gap:0;padding:6px var(--pad) 18px;background:var(--bg);border-bottom:1px solid var(--line-soft);opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity 200ms var(--ease),transform 200ms var(--ease)}
+  .head__links.open{opacity:1;transform:none;pointer-events:auto}
+  .head__links a{padding:13px 0;font-size:16px;border-bottom:1px solid var(--line-soft)}
+  .head__burger{display:inline-flex}
+}
+
+/* ─────────── HERO ─────────── */
+.hero{padding:clamp(56px,11vh,110px) 0 clamp(52px,9vh,96px)}
+.hero__rule{display:flex;align-items:center;gap:16px;margin-bottom:clamp(36px,7vh,70px)}
+.hero__rule span{flex:none}
+.hero__rule i{flex:1;height:1px;background:var(--line-soft);display:block}
+.hero__name{
+  font-family:var(--display);
+  font-size:clamp(58px,13.5vw,178px);
+  line-height:.86;letter-spacing:-.045em;
+  font-variation-settings:'SOFT' 32,'WONK' 1,'opsz' 144;
+  font-weight:380;
+  margin-left:-.055em;
+}
+.hero__name em{font-style:italic;font-weight:300;color:var(--fg-dim)}
+.hero__under{
+  margin-top:clamp(30px,5vh,58px);
+  display:grid;grid-template-columns:repeat(12,1fr);gap:28px;align-items:start;
+}
+.hero__sub{
+  grid-column:6 / 12;
+  font-family:var(--display);font-size:clamp(20px,2.1vw,27px);line-height:1.35;
+  font-variation-settings:'SOFT' 20,'opsz' 40;color:var(--fg);
+  max-width:34ch;text-indent:2.2em;
+}
+.hero__meta{grid-column:1 / 5;display:grid;gap:18px;padding-top:9px}
+.hero__status{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--fg-dim)}
+.hero__status .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex:none;box-shadow:0 0 0 3px color-mix(in oklab,var(--accent) 22%,transparent)}
+.hero__cta{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center}
+@media (max-width:860px){
+  .hero__under{grid-template-columns:1fr;gap:26px}
+  .hero__sub{grid-column:1/-1;text-indent:0;max-width:40ch}
+  .hero__meta{grid-column:1/-1;padding-top:0}
+}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:999px;
+  font-family:var(--sans);font-size:13px;font-weight:500;letter-spacing:.01em;
+  border:1px solid var(--accent);background:var(--accent);color:var(--on-accent);cursor:pointer;
+  transition:all var(--dur) var(--ease);
+}
+.btn:hover{filter:brightness(1.08);color:var(--on-accent)}
+.btn .arw{transition:transform var(--dur) var(--ease)}
+.btn:hover .arw{transform:translateX(3px)}
+.link-u{
+  font-size:13.5px;color:var(--fg-dim);
+  border-bottom:1px solid var(--line);padding-bottom:2px;
+  transition:color var(--dur) var(--ease),border-color var(--dur) var(--ease);
+}
+.link-u:hover{color:var(--accent-ink);border-color:var(--accent-ink)}
+
+/* ─────────── FOLHA / SEÇÕES ─────────── */
+.sheet{
+  display:grid;grid-template-columns:repeat(12,1fr);gap:0 36px;
+  padding:var(--row-pad) 0;border-top:1px solid var(--line-soft);
+}
+.sheet__aside{grid-column:1 / 4;position:sticky;top:96px;align-self:start;display:grid;gap:14px}
+.sheet__body{grid-column:5 / 13}
+.sheet__title{
+  font-family:var(--display);font-size:clamp(26px,2.7vw,36px);line-height:1.1;letter-spacing:-.02em;
+  font-variation-settings:'SOFT' 24,'WONK' 1,'opsz' 40;max-width:16ch;
+}
+.sheet__title em{font-style:italic;color:var(--fg-dim)}
+@media (max-width:900px){
+  .sheet{grid-template-columns:1fr;gap:26px}
+  .sheet__aside{grid-column:1/-1;position:static}
+  .sheet__body{grid-column:1/-1}
+}
+
+/* Ferramentas */
+.stack__group{
+  display:grid;grid-template-columns:minmax(120px,1fr) 3fr;gap:12px 36px;
+  padding:16px 0;border-bottom:1px solid var(--line-soft);align-items:baseline;
+}
+.stack__group:first-child{border-top:1px solid var(--line-soft)}
+.stack__items{
+  font-family:var(--display);font-size:19px;line-height:1.45;
+  font-variation-settings:'SOFT' 20,'opsz' 24;
+  display:flex;flex-wrap:wrap;gap:0 14px;
+}
+.stack__items span::after{content:'·';margin-left:14px;color:var(--fg-faint)}
+.stack__items span:last-child::after{content:''}
+.stack__note{margin-top:22px;font-size:14.5px;color:var(--fg-faint);max-width:50ch}
+@media (max-width:560px){.stack__group{grid-template-columns:1fr;gap:6px}}
+
+/* Projetos — índice editorial */
+.project{
+  display:grid;grid-template-columns:2.2fr 1fr;gap:6px 36px;align-items:end;
+  padding:26px 0;border-bottom:1px solid var(--line-soft);
+  transition:border-color var(--dur) var(--ease);
+}
+.project:first-child{border-top:1px solid var(--line-soft)}
+.project:hover{border-bottom-color:var(--line)}
+.project__num{
+  font-family:var(--display);font-size:12.5px;color:var(--fg-faint);
+  display:block;margin-bottom:9px;letter-spacing:.06em;
+}
+.project__title{
+  font-family:var(--display);font-size:clamp(25px,3vw,38px);line-height:1.06;letter-spacing:-.025em;
+  font-variation-settings:'SOFT' 28,'WONK' 1,'opsz' 72;font-weight:380;
+  display:inline-flex;align-items:baseline;gap:10px;
+  transition:color var(--dur) var(--ease);
+}
+.project__title .arrow{font-size:.42em;color:var(--fg-faint);transition:transform var(--dur) var(--ease),color var(--dur) var(--ease)}
+.project a.project__link:hover .project__title{color:var(--accent-ink)}
+.project a.project__link:hover .arrow{transform:translate(4px,-4px);color:var(--accent-ink)}
+.project__desc{margin-top:11px;color:var(--fg-dim);font-size:15.5px;max-width:48ch}
+.project__side{display:grid;gap:7px;justify-items:start;padding-bottom:4px}
+.project__role{font-size:13px;color:var(--fg)}
+.project__period{font-size:12.5px;color:var(--fg-faint)}
+.project__tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:3px}
+.project__tags span{font-size:11.5px;letter-spacing:.02em;color:var(--fg-dim);border:1px solid var(--line-soft);border-radius:999px;padding:3px 10px}
+@media (max-width:760px){
+  .project{grid-template-columns:1fr;gap:14px;align-items:start}
+  .project__side{justify-items:start}
+}
+
+/* Trajetória */
+.xp{display:grid;grid-template-columns:132px 1fr;gap:10px 32px;padding:22px 0;border-bottom:1px solid var(--line-soft)}
+.xp:first-child{border-top:1px solid var(--line-soft)}
+.xp__date{font-size:12.5px;color:var(--fg-faint);padding-top:4px;letter-spacing:.02em}
+.xp h3{font-family:var(--display);font-size:21px;letter-spacing:-.015em;font-variation-settings:'SOFT' 20,'opsz' 32;margin-bottom:5px}
+.xp h3 .at{font-style:italic;color:var(--fg-faint);font-size:.82em}
+.xp h3 .co{color:var(--accent-ink)}
+.xp p{color:var(--fg-dim);font-size:15px;max-width:58ch;margin-bottom:8px}
+.xp__tags{display:flex;flex-wrap:wrap;gap:12px;font-size:11.5px;color:var(--fg-faint);letter-spacing:.04em}
+@media (max-width:640px){.xp{grid-template-columns:1fr;gap:5px}}
+
+/* Contato */
+.contact{padding:var(--row-pad) 0;border-top:1px solid var(--line-soft)}
+.contact__big{
+  font-family:var(--display);font-size:clamp(36px,6.4vw,86px);line-height:1.02;letter-spacing:-.04em;
+  font-variation-settings:'SOFT' 34,'WONK' 1,'opsz' 144;font-weight:350;
+  max-width:15ch;margin-bottom:clamp(34px,6vh,60px);
+}
+.contact__big em{font-style:italic;font-weight:300}
+.contact__big a{border-bottom:2px solid var(--line);padding-bottom:.04em;transition:color var(--dur) var(--ease),border-color var(--dur) var(--ease)}
+.contact__big a:hover{color:var(--accent-ink);border-color:var(--accent-ink)}
+.contact__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));border-top:1px solid var(--line-soft)}
+.contact__cell{display:block;padding:18px 24px 18px 0;border-bottom:1px solid var(--line-soft)}
+.contact__cell .k{display:block;margin-bottom:7px}
+.contact__line{display:flex;align-items:baseline;gap:7px}
+.contact__val{font-family:var(--display);font-size:17px;font-variation-settings:'SOFT' 18,'opsz' 24;word-break:break-word;transition:color var(--dur) var(--ease)}
+a.contact__cell:hover .contact__val{color:var(--accent-ink)}
+a.contact__cell .arr{font-size:12px;color:var(--fg-faint);flex:none;transition:transform var(--dur) var(--ease),color var(--dur) var(--ease)}
+a.contact__cell:hover .arr{transform:translate(2px,-2px);color:var(--accent-ink)}
+
+/* Divisor + Diagramação */
+.band{background:var(--bg-2);border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}
+.band__inner{max-width:var(--maxw);margin:0 auto;padding:13px var(--pad);display:flex;align-items:center;gap:18px}
+.band__line{flex:1;height:1px;background:var(--line)}
+.design{padding:var(--row-pad) 0}
+.design__intro{
+  font-family:var(--display);font-style:italic;font-size:19px;line-height:1.5;
+  font-variation-settings:'SOFT' 22,'opsz' 32;color:var(--fg-dim);max-width:52ch;margin-bottom:clamp(34px,6vh,58px);
+}
+.design-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:30px 26px;align-items:start}
+.design-card{display:grid;gap:12px}
+.design-card__preview{
+  background:var(--card);border:1px solid var(--line-soft);
+  display:flex;align-items:center;justify-content:center;position:relative;
+  transition:border-color var(--dur) var(--ease);aspect-ratio:3/4;
+}
+.design-card__preview::after{content:'';position:absolute;inset:11px;border:1px solid var(--line-soft)}
+.design-card:hover .design-card__preview{border-color:var(--line)}
+.design-card:nth-child(3n+2){margin-top:34px}
+.design-card:nth-child(3n+2) .design-card__preview{aspect-ratio:1/1}
+.design-card:nth-child(3n+3){margin-top:14px}
+.design-card:nth-child(3n+3) .design-card__preview{aspect-ratio:4/5}
+@media (max-width:640px){.design-card{margin-top:0 !important}}
+.design-card__ph{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--fg-faint)}
+.design-card__title{font-family:var(--display);font-size:19px;letter-spacing:-.01em;font-variation-settings:'SOFT' 20,'opsz' 24}
+.design-card__meta{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-faint);margin-top:3px}
+.design-card__desc{font-size:14.5px;color:var(--fg-dim);margin-top:7px;line-height:1.5}
+
+/* Rodapé */
+footer{border-top:1px solid var(--line-soft)}
+footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;padding-top:26px;padding-bottom:34px;font-size:12px;color:var(--fg-faint)}
+footer a{color:var(--fg-faint);border-bottom:1px solid transparent;transition:color var(--dur) var(--ease),border-color var(--dur) var(--ease)}
+footer a:hover{color:var(--fg-dim);border-bottom-color:var(--line)}
+
+/* Entrada discreta (só uma vez, no topo) */
+.enter{animation:rise 620ms var(--ease) both}
+.enter[data-d="1"]{animation-delay:70ms}
+.enter[data-d="2"]{animation-delay:140ms}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.enter{animation:none}html{scroll-behavior:auto}}
+
+/* Painel de ajustes (modo edição) */
+#tweaks{position:fixed;right:20px;bottom:20px;z-index:100;width:244px;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:16px;font-family:var(--sans);font-size:12px;box-shadow:0 18px 50px rgba(0,0,0,.22);display:none}
+#tweaks.show{display:block}
+#tweaks h4{margin:0 0 14px;font-size:10px;font-weight:600;color:var(--fg-faint);letter-spacing:.18em;text-transform:uppercase}
+#tweaks .group{margin-bottom:14px}
+#tweaks .group:last-child{margin-bottom:0}
+#tweaks label{display:block;font-size:9.5px;font-weight:600;color:var(--fg-faint);margin-bottom:7px;letter-spacing:.14em;text-transform:uppercase}
+#tweaks .swatches{display:flex;gap:7px}
+#tweaks .sw{width:24px;height:24px;border-radius:50%;border:1px solid var(--line);cursor:pointer;transition:transform 180ms var(--ease)}
+#tweaks .sw:hover{transform:scale(1.1)}
+#tweaks .sw.active{box-shadow:0 0 0 2px var(--card),0 0 0 3px var(--fg)}
+#tweaks .seg{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+#tweaks .seg button{flex:1;padding:6px 8px;border:0;background:transparent;color:var(--fg-dim);font-family:var(--sans);font-size:10.5px;cursor:pointer;transition:all 180ms var(--ease)}
+#tweaks .seg button.active{background:var(--accent);color:var(--on-accent)}
+#tweaks .seg button:hover:not(.active){background:var(--bg-2);color:var(--fg)}
+</style>
+</head>
+<body>
+
+<header class="head" id="head">
+  <div class="head__inner">
+    <a href="#top" class="head__brand">joão <i>brito</i></a>
+    <div class="head__right">
+      <nav class="head__links" id="navLinks">
+        <a href="#stack">ferramentas</a>
+        <a href="#work">projetos</a>
+        <a href="#experience">trajetória</a>
+        <a href="#design">diagramação</a>
+        <a href="#contact">contato</a>
+      </nav>
+      <button class="icon-btn" id="themeToggle" title="Alternar tema" aria-label="Alternar tema">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.4v2.2M12 19.4v2.2M4.6 4.6l1.5 1.5M17.9 17.9l1.5 1.5M2.4 12h2.2M19.4 12h2.2M4.6 19.4l1.5-1.5M17.9 6.1l1.5-1.5"/></svg>
+      </button>
+      <button class="icon-btn head__burger" id="burger" aria-label="Abrir menu" aria-expanded="false" aria-controls="navLinks">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h18M3 16h18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="wrap hero">
+    <div class="hero__rule enter">
+      <span class="eyebrow">Portfólio</span>
+      <i></i>
+      <span class="eyebrow" id="hero-year">São Paulo</span>
+    </div>
+    <h1 class="hero__name enter" data-d="1" data-jb="hero-name">João Brito</h1>
+    <div class="hero__under">
+      <div class="hero__meta enter" data-d="2">
+        <div class="hero__status">
+          <span class="dot"></span>
+          <span data-jb="hero-status">Aceitando trabalho novo</span>
+        </div>
+        <div class="hero__cta">
+          <a href="#work" class="btn" data-jb="cta-primary">Ver projetos <span class="arw">→</span></a>
+          <a href="#contact" class="link-u" data-jb="cta-secondary">Falar comigo</a>
+        </div>
+      </div>
+      <p class="hero__sub enter" data-d="2" data-jb="hero-sub"></p>
+    </div>
+  </section>
+
+  <!-- FERRAMENTAS -->
+  <section class="wrap sheet" id="stack">
+    <div class="sheet__aside">
+      <span class="eyebrow">01 — Ferramentas</span>
+      <h2 class="sheet__title" id="stack-title"></h2>
+    </div>
+    <div class="sheet__body">
+      <div id="stack-list"></div>
+      <p class="stack__note" data-jb="stack-note"></p>
+    </div>
+  </section>
+
+  <!-- PROJETOS -->
+  <section class="wrap sheet" id="work">
+    <div class="sheet__aside">
+      <span class="eyebrow">02 — Projetos</span>
+      <h2 class="sheet__title" id="work-title"></h2>
+    </div>
+    <div class="sheet__body" id="projects"></div>
+  </section>
+
+  <!-- TRAJETÓRIA -->
+  <section class="wrap sheet" id="experience">
+    <div class="sheet__aside">
+      <span class="eyebrow">03 — Trajetória</span>
+      <h2 class="sheet__title" id="xp-title"></h2>
+    </div>
+    <div class="sheet__body" id="timeline"></div>
+  </section>
+
+  <!-- CONTATO -->
+  <section class="wrap contact" id="contact">
+    <span class="eyebrow">04 — Contato</span>
+    <h2 class="contact__big" id="contact-big" style="margin-top:22px"></h2>
+    <div class="contact__grid" id="contact-grid"></div>
+  </section>
+
+  <!-- DIVISOR -->
+  <div class="band">
+    <div class="band__inner">
+      <div class="band__line"></div>
+      <span class="eyebrow">além do código</span>
+      <div class="band__line"></div>
+    </div>
+  </div>
+
+  <!-- DIAGRAMAÇÃO -->
+  <section class="wrap design" id="design">
+    <span class="eyebrow">05 — Diagramação</span>
+    <h2 class="contact__big" id="design-title" style="margin-top:22px;margin-bottom:26px;font-size:clamp(30px,4.4vw,58px);max-width:18ch"></h2>
+    <p class="design__intro" data-jb="design-intro"></p>
+    <div class="design-grid" id="design-grid"></div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <span data-jb="footer-sig">© 2026 João Brito</span>
+      <a href="admin.html">editar conteúdo</a>
+    </div>
+  </footer>
+</main>
+
+<div id="tweaks" role="dialog" aria-label="Ajustes">
+  <h4>ajustes</h4>
+  <div class="group">
+    <label>cor de destaque</label>
+    <div class="swatches" id="tw-accent">
+      <button class="sw" data-accent="#a8432a" style="background:#a8432a" aria-label="terracota"></button>
+      <button class="sw" data-accent="#2f4b7c" style="background:#2f4b7c" aria-label="azul tinta"></button>
+      <button class="sw" data-accent="#4d6340" style="background:#4d6340" aria-label="verde oliva"></button>
+      <button class="sw" data-accent="#6b3a56" style="background:#6b3a56" aria-label="ameixa"></button>
+      <button class="sw" data-accent="#8a6a1f" style="background:#8a6a1f" aria-label="ocre"></button>
+    </div>
+  </div>
+  <div class="group">
+    <label>tema</label>
+    <div class="seg" id="tw-theme"><button data-theme="light">claro</button><button data-theme="dark">escuro</button></div>
+  </div>
+  <div class="group">
+    <label>densidade</label>
+    <div class="seg" id="tw-density"><button data-density="compact">justo</button><button data-density="comfortable">normal</button><button data-density="spacious">aberto</button></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const root = document.documentElement;
+  const esc = s => String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+  // ---------- TEMA / AJUSTES ----------
+  applyTheme(localStorage.getItem('jb_theme_v3') || TWEAK_DEFAULTS.theme);
+  applyAccent(localStorage.getItem('jb_accent_v3') || TWEAK_DEFAULTS.accent);
+  applyDensity(localStorage.getItem('jb_density_v3') || TWEAK_DEFAULTS.density);
+
+  function applyTheme(t){ root.setAttribute('data-theme',t); localStorage.setItem('jb_theme_v3',t); syncTweaks(); }
+  function applyAccent(c){ root.style.setProperty('--accent',c); localStorage.setItem('jb_accent_v3',c); syncTweaks(); }
+  function applyDensity(d){ root.setAttribute('data-density',d); localStorage.setItem('jb_density_v3',d); syncTweaks(); }
+
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    applyTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+
+  function syncTweaks(){
+    const t = root.getAttribute('data-theme');
+    const d = root.getAttribute('data-density') || 'comfortable';
+    const a = getComputedStyle(root).getPropertyValue('--accent').trim().toLowerCase();
+    document.querySelectorAll('#tw-theme button').forEach(b => b.classList.toggle('active', b.dataset.theme === t));
+    document.querySelectorAll('#tw-density button').forEach(b => b.classList.toggle('active', b.dataset.density === d));
+    document.querySelectorAll('#tw-accent .sw').forEach(b => b.classList.toggle('active', b.dataset.accent.toLowerCase() === a));
+  }
+  const persist = edits => { try { window.parent.postMessage({ type:'__edit_mode_set_keys', edits }, '*'); } catch(e){} };
+  document.getElementById('tw-accent').addEventListener('click', e => { const b = e.target.closest('.sw'); if(!b) return; applyAccent(b.dataset.accent); persist({accent:b.dataset.accent}); });
+  document.getElementById('tw-theme').addEventListener('click', e => { const b = e.target.closest('button'); if(!b) return; applyTheme(b.dataset.theme); persist({theme:b.dataset.theme}); });
+  document.getElementById('tw-density').addEventListener('click', e => { const b = e.target.closest('button'); if(!b) return; applyDensity(b.dataset.density); persist({density:b.dataset.density}); });
+  const panel = document.getElementById('tweaks');
+  window.addEventListener('message', ev => {
+    const d = ev.data || {};
+    if (d.type === '__activate_edit_mode') panel.classList.add('show');
+    if (d.type === '__deactivate_edit_mode') panel.classList.remove('show');
+  });
+  try { window.parent.postMessage({ type:'__edit_mode_available' }, '*'); } catch(e){}
+
+  // ---------- NAVEGAÇÃO ----------
+  const head = document.getElementById('head');
+  const navLinks = document.getElementById('navLinks');
+  const burger = document.getElementById('burger');
+  burger.addEventListener('click', () => {
+    const open = navLinks.classList.toggle('open');
+    burger.setAttribute('aria-expanded', String(open));
+  });
+  navLinks.addEventListener('click', e => {
+    if (e.target.tagName === 'A') { navLinks.classList.remove('open'); burger.setAttribute('aria-expanded','false'); }
+  });
+
+  const sections = ['stack','work','experience','contact','design'];
+  const onScroll = () => {
+    head.classList.toggle('scrolled', window.scrollY > 6);
+    let current = '';
+    for (const id of sections) {
+      const el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top <= 150) current = id;
+    }
+    navLinks.querySelectorAll('a').forEach(a => {
+      if (a.getAttribute('href') === '#' + current) a.setAttribute('aria-current','true');
+      else a.removeAttribute('aria-current');
+    });
+  };
+  window.addEventListener('scroll', onScroll, { passive:true });
+
+  // ---------- CONTEÚDO ----------
+  const PD = {
+    hero: {
+      name: "João Brito",
+      status: "Aceitando trabalho novo",
+      sub: "Desenvolvedor full-stack. Trabalho no que sustenta o produto: banco, servidor e interface.",
+      ctaPrimary: "Ver projetos",
+      ctaSecondary: "Falar comigo"
+    },
+    nav: { brand: "joão brito" },
+    stack: {
+      title: "O que uso no dia a dia",
+      note: "Aprendo o que o projeto exige. Essa lista muda com o tempo.",
+      groups: [
+        { label: "Linguagens", items: "TypeScript, Go, SQL" },
+        { label: "Frontend", items: "React, Next.js" },
+        { label: "Backend", items: "Node.js, PostgreSQL, Redis" },
+        { label: "Infra", items: "Docker, AWS" }
+      ]
+    },
+    work: {
+      title: "Alguns trabalhos recentes",
+      projects: [
+        { title: "Vault Ledger", desc: "Plataforma de contabilidade para fintechs. Registro de transações, fechamento e trilha de auditoria.", role: "Lead engineer", period: "2024 — hoje", tags: "Go, PostgreSQL, Kafka", url: "" },
+        { title: "Orbital CMS", desc: "CMS headless de código aberto com edição colaborativa.", role: "Criador", period: "2023 — hoje", tags: "TypeScript, tRPC, Prisma", url: "" },
+        { title: "Meridian Analytics", desc: "Painel de análise para e-commerce: ingestão contínua de eventos e consultas sobre o histórico de vendas.", role: "Staff engineer", period: "2022 — 2024", tags: "ClickHouse, React", url: "" },
+        { title: "Tide API Gateway", desc: "Gateway interno que centralizou autenticação, limite de requisições e observabilidade dos serviços da empresa.", role: "Time de plataforma", period: "2021 — 2023", tags: "Go, gRPC, Envoy", url: "" }
+      ]
+    },
+    experience: {
+      title: "Onde trabalhei",
+      items: [
+        { date: "2024 — hoje", role: "Lead Full-Stack Engineer", company: "Vault.fi", desc: "Conduzo o time do motor de contabilidade: arquitetura dos serviços, revisão de código e processo de entrega.", tags: "Go, PostgreSQL, Kafka" },
+        { date: "2022 — 2024", role: "Staff Engineer", company: "Meridian Labs", desc: "Responsável pela arquitetura da plataforma de analytics e pela reformulação da camada de ingestão.", tags: "ClickHouse, Node, React" },
+        { date: "2020 — 2022", role: "Senior Developer", company: "Tide", desc: "Construí o gateway interno e montei a base de observabilidade dos serviços.", tags: "Go, gRPC" },
+        { date: "2018 — 2020", role: "Full-Stack Developer", company: "Nimbus Studio", desc: "Agência digital. Entreguei produtos para clientes de varejo e mídia, do layout ao deploy.", tags: "TypeScript, React, Node" }
+      ]
+    },
+    contact: {
+      heading: "Me manda um e-mail",
+      email: "ola@joaobrito.dev",
+      github: "github.com/jbrito",
+      githubUrl: "",
+      linkedin: "in/joao-brito-dev",
+      linkedinUrl: "",
+      location: "São Paulo, BR"
+    },
+    footer: { sig: "© 2026 João Brito" },
+    design: {
+      title: "Primeiros passos em diagramação",
+      intro: "Sou desenvolvedor de formação e estou começando a estudar diagramação editorial no InDesign. O que está aqui são exercícios, não trabalho de cliente.",
+      works: [
+        { title: "Trabalho 01", type: "Capa", year: "2026", format: "A4", desc: "Estudo de composição e tipografia." },
+        { title: "Trabalho 02", type: "Revista", year: "2026", format: "A4", desc: "Exercício de grid de múltiplas colunas." },
+        { title: "Trabalho 03", type: "Layout", year: "2026", format: "A4", desc: "Estudo de hierarquia e espaçamento." }
+      ]
+    }
+  };
+
+  function deepMerge(target, source) {
+    for (const k of Object.keys(source || {})) {
+      if (source[k] && typeof source[k] === 'object' && !Array.isArray(source[k])) {
+        if (!target[k]) target[k] = {};
+        deepMerge(target[k], source[k]);
+      } else target[k] = source[k];
+    }
+    return target;
+  }
+  function loadData() {
+    try {
+      const raw = localStorage.getItem('jb_portfolio_data_v2');
+      if (raw) return deepMerge(JSON.parse(JSON.stringify(PD)), JSON.parse(raw));
+    } catch(e){}
+    return JSON.parse(JSON.stringify(PD));
+  }
+  const setText = (sel, v) => { const el = document.querySelector(sel); if (el && v != null) el.textContent = v; };
+  const splitList = s => String(s || '').split(',').map(x => x.trim()).filter(Boolean);
+
+  function render(d) {
+    const brand = String(d.nav.brand || '').trim().split(' ');
+    const bl = brand.pop();
+    document.querySelector('.head__brand').innerHTML =
+      (brand.length ? esc(brand.join(' ')) + ' ' : '') + `<i>${esc(bl)}</i>`;
+
+    setText('[data-jb="hero-status"]', d.hero.status);
+    setText('[data-jb="hero-name"]', d.hero.name);
+    setText('[data-jb="hero-sub"]', d.hero.sub);
+    setText('#hero-year', d.contact.location || '');
+    const p1 = document.querySelector('[data-jb="cta-primary"]');
+    if (p1) p1.innerHTML = esc(d.hero.ctaPrimary) + ' <span class="arw">→</span>';
+    setText('[data-jb="cta-secondary"]', d.hero.ctaSecondary);
+
+    setText('#stack-title', d.stack.title);
+    setText('[data-jb="stack-note"]', d.stack.note);
+    document.getElementById('stack-list').innerHTML = (d.stack.groups || []).map(g => `
+      <div class="stack__group">
+        <span class="eyebrow">${esc(g.label)}</span>
+        <div class="stack__items">${splitList(g.items).map(x => `<span>${esc(x)}</span>`).join('')}</div>
+      </div>`).join('');
+
+    setText('#work-title', d.work.title);
+    document.getElementById('projects').innerHTML = (d.work.projects || []).map((p, i) => {
+      const head = `<span class="project__title">${esc(p.title)}${p.url ? ' <span class="arrow">↗</span>' : ''}</span>`;
+      const tags = splitList(p.tags).map(t => `<span>${esc(t)}</span>`).join('');
+      return `<article class="project">
+        <div>
+          <span class="project__num">${String(i+1).padStart(2,'0')}</span>
+          ${p.url ? `<a class="project__link" href="${esc(p.url)}" target="_blank" rel="noopener">${head}</a>` : head}
+          <p class="project__desc">${esc(p.desc)}</p>
+        </div>
+        <div class="project__side">
+          ${p.role ? `<span class="project__role">${esc(p.role)}</span>` : ''}
+          ${p.period ? `<span class="project__period">${esc(p.period)}</span>` : ''}
+          ${tags ? `<div class="project__tags">${tags}</div>` : ''}
+        </div>
+      </article>`;
+    }).join('');
+
+    setText('#xp-title', d.experience.title);
+    document.getElementById('timeline').innerHTML = (d.experience.items || []).map(x => `
+      <div class="xp">
+        <div class="xp__date">${esc(x.date)}</div>
+        <div>
+          <h3>${esc(x.role)} <span class="at">em</span> <span class="co">${esc(x.company)}</span></h3>
+          <p>${esc(x.desc)}</p>
+          ${x.tags ? `<div class="xp__tags">${splitList(x.tags).map(t => `<span>${esc(t)}</span>`).join('')}</div>` : ''}
+        </div>
+      </div>`).join('');
+
+    const big = document.getElementById('contact-big');
+    if (big) {
+      const h = String(d.contact.heading || '').trim();
+      const words = h.split(' ');
+      const last = words.pop();
+      big.innerHTML = (words.length ? esc(words.join(' ')) + ' ' : '') +
+        `<em><a href="mailto:${esc(d.contact.email)}">${esc(last)}</a></em>`;
+    }
+    const cells = [
+      { k:'e-mail', v:d.contact.email, href:'mailto:' + d.contact.email },
+      { k:'github', v:d.contact.github, href:d.contact.githubUrl },
+      { k:'linkedin', v:d.contact.linkedin, href:d.contact.linkedinUrl },
+      { k:'onde estou', v:d.contact.location, href:'' }
+    ].filter(c => c.v);
+    document.getElementById('contact-grid').innerHTML = cells.map(c => {
+      const k = `<span class="k eyebrow">${esc(c.k)}</span>`;
+      return c.href
+        ? `<a class="contact__cell" href="${esc(c.href)}"${c.href.startsWith('http') ? ' target="_blank" rel="noopener"' : ''}>${k}<span class="contact__line"><span class="contact__val">${esc(c.v)}</span><span class="arr">↗</span></span></a>`
+        : `<div class="contact__cell">${k}<span class="contact__line"><span class="contact__val">${esc(c.v)}</span></span></div>`;
+    }).join('');
+
+    setText('#design-title', d.design.title);
+    setText('[data-jb="design-intro"]', d.design.intro);
+    document.getElementById('design-grid').innerHTML = (d.design.works || []).map(w => `
+      <figure class="design-card" style="margin:0">
+        <div class="design-card__preview"><span class="design-card__ph">sem imagem</span></div>
+        <figcaption>
+          <div class="design-card__title">${esc(w.title)}</div>
+          <div class="design-card__meta">${[w.type, w.format, w.year].filter(Boolean).map(esc).join(' · ')}</div>
+          ${w.desc ? `<p class="design-card__desc">${esc(w.desc)}</p>` : ''}
+        </figcaption>
+      </figure>`).join('');
+
+    setText('[data-jb="footer-sig"]', d.footer.sig);
+  }
+
+  render(loadData());
+  onScroll();
+  syncTweaks();
+})();
+</script>
+</body>
+</html>
