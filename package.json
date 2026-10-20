@@ -1,0 +1,7 @@
+{
+  "name": "joaovitor2344",
+  "private": true,
+  "dependencies": {
+    "@vercel/analytics": "2.0.1"
+  }
+}

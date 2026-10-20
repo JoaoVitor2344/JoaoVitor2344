@@ -424,5 +424,13 @@ footer { border-top: 1px solid var(--line); padding: 24px 0 40px; }
   }
 })();
 </script>
+<script type="importmap">
+{ "imports": { "@vercel/analytics": "https://cdn.jsdelivr.net/npm/@vercel/analytics@2.0.1/+esm" } }
+</script>
+<script type="module">
+  // Vercel Web Analytics (mesma versão do package.json)
+  import { inject } from '@vercel/analytics';
+  inject();
+</script>
 </body>
 </html>
